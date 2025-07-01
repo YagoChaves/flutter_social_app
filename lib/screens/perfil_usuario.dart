@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'photo_detail_screen.dart';
 
 class PerfilUsuarioScreen extends StatelessWidget {
   const PerfilUsuarioScreen({super.key});
@@ -7,34 +6,79 @@ class PerfilUsuarioScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Perfil do Usuário'),
         backgroundColor: Colors.black,
+        title: const Text('username', style: TextStyle(color: Colors.white)),
+        actions: const [
+          Icon(Icons.add_box_outlined, color: Colors.white),
+          SizedBox(width: 16),
+          Icon(Icons.menu, color: Colors.white),
+          SizedBox(width: 12),
+        ],
       ),
-      body: ListView(
+      body: Column(
         children: [
-          _buildUserHeader(),
-          _buildPost(context),
+          _buildProfileHeader(),
+          _buildDashboard(),
+          _buildStories(),
+          _buildTabs(),
+          _buildGridPosts(context), // Passa context para o método
         ],
       ),
     );
   }
 
-  Widget _buildUserHeader() {
+  Widget _buildProfileHeader() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.0),
       child: Row(
         children: [
-          const CircleAvatar(
-            radius: 30,
+          CircleAvatar(
+            radius: 35,
             backgroundImage: AssetImage('assets/images/images.jpeg'),
           ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('usuario_exemplo', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              Text('Flutter Dev', style: TextStyle(color: Colors.grey)),
+          SizedBox(width: 24),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStat('∞', 'Posts'),
+                _buildStat('∞', 'Followers'),
+                _buildStat('∞', 'Following'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDashboard() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Professional dashboard", style: TextStyle(color: Colors.white)),
+          Text("2.8K accounts reached in the last 30 days.",
+              style: TextStyle(color: Colors.grey, fontSize: 12)),
+          SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: null,
+                  child: Text("Edit profile", style: TextStyle(color: Colors.white)),
+                ),
+              ),
+              SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: null,
+                  child: Text("Share profile", style: TextStyle(color: Colors.white)),
+                ),
+              ),
             ],
           ),
         ],
@@ -42,46 +86,64 @@ class PerfilUsuarioScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPost(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text('Legenda da foto de exemplo #flutter'),
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const PhotoDetailScreen()),
-            );
-          },
-          child: Container(
-            margin: const EdgeInsets.all(16),
-            height: 300,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              image: const DecorationImage(
-                image: AssetImage('assets/images/TestImage.jpg'),
-                fit: BoxFit.cover,
-              ),
+  Widget _buildStories() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          CircleAvatar(radius: 24, backgroundColor: Colors.grey),
+          CircleAvatar(radius: 24, backgroundColor: Colors.grey),
+          CircleAvatar(radius: 24, backgroundColor: Colors.grey),
+          CircleAvatar(radius: 24, backgroundColor: Colors.grey),
+          CircleAvatar(radius: 24, backgroundColor: Colors.grey),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabs() {
+    return const Padding(
+      padding: EdgeInsets.only(top: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Icon(Icons.grid_on, color: Colors.white),
+          Icon(Icons.person_pin_outlined, color: Colors.white),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGridPosts(BuildContext context) {
+    return Expanded(
+      child: GridView.count(
+        crossAxisCount: 3,
+        padding: const EdgeInsets.all(1),
+        crossAxisSpacing: 1,
+        mainAxisSpacing: 1,
+        children: List.generate(9, (index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/photo');
+            },
+            child: Image.asset(
+              'assets/images/TestImage.jpg',
+              fit: BoxFit.cover,
             ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            children: [
-              Icon(Icons.favorite_border),
-              SizedBox(width: 8),
-              Icon(Icons.chat_bubble_outline),
-              SizedBox(width: 8),
-              Icon(Icons.send),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
+          );
+        }),
+      ),
+    );
+  }
+
+  static Widget _buildStat(String count, String label) {
+    return Column(
+      children: [
+        Text(count,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(label, style: const TextStyle(color: Colors.white)),
       ],
     );
   }
